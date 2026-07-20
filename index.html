@@ -1,1 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Tutor | Personalized Student Learning Recommendation</title>
+
+<!-- Google Font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Font Awesome -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<!-- AOS -->
+
+<link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+<!-- Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+:root{
+
+--primary:#5B5FEF;
+--secondary:#7F5AF0;
+--cyan:#00D9FF;
+--dark:#07111F;
+--dark2:#101B2D;
+--white:#ffffff;
+--glass:rgba(255,255,255,.08);
+--border:rgba(255,255,255,.18);
+
+}
+
+body{
+
+background:linear-gradient(
+-45deg,
+#09111f,
+#111d34,
+#15284a,
+#0f172a);
+
+background-size:400% 400%;
+animation:gradientBG 15s ease infinite;
+color:white;
+overflow-x:hidden;
+
+}
+
+@keyframes gradientBG{
+
+0%{
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
+}
+
+100%{
+background-position:0% 50%;
+}
+
+}
+
+::-webkit-scrollbar{
+
+width:10px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:var(--primary);
+border-radius:50px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#08101d;
+
+}
+
+/* Floating Blobs */
+
+.blob{
+
+position:fixed;
+border-radius:50%;
+filter:blur(90px);
+opacity:.30;
+z-index:-1;
+animation:floatBlob 18s infinite alternate;
+
+}
+
+.blob:nth-child(1){
+
+width:350px;
+height:350px;
+background:#5B5FEF;
+top:-100px;
+left:-100px;
+
+}
+
+.blob:nth-child(2){
+
+width:300px;
+height:300px;
+background:#00D9FF;
+bottom:-120px;
+right:-80px;
+animation-duration:24s;
+
+}
+
+.blob:nth-child(3){
+
+width:220px;
+height:220px;
+background:#8B5CF6;
+top:40%;
+left:60%;
+animation-duration:20s;
+
+}
+
+@keyframes floatBlob{
+
+from{
+
+transform:translateY(0px) translateX(0px);
+
+}
+
+to{
+
+transform:translateY(80px) translateX(70px);
+
+}
+
+}
+
+/* Navbar */
+
+.navbar{
+
+padding:18px 0;
+backdrop-filter:blur(18px);
+background:rgba(255,255,255,.05);
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.navbar-brand{
+
+font-size:30px;
+font-weight:800;
+color:white !important;
+
+}
+
+.nav-link{
+
+color:white !important;
+margin-left:20px;
+font-weight:500;
+transition:.4s;
+position:relative;
+
+}
+
+.nav-link:hover{
+
+color:#00D9FF !important;
+
+}
+
+.nav-link::after{
+
+content:"";
+position:absolute;
+left:0;
+bottom:-5px;
+height:2px;
+width:0;
+background:#00D9FF;
+transition:.4s;
+
+}
+
+.nav-link:hover::after{
+
+width:100%;
+
+}
+
+/* Hero */
+
+.hero{
+
+padding:120px 0;
+min-height:100vh;
+display:flex;
+align-items:center;
+
+}
+
+.hero-title{
+
+font-size:65px;
+font-weight:800;
+line-height:1.2;
+
+}
+
+.gradient{
+
+background:linear-gradient(
+90deg,
+#00D9FF,
+#5B5FEF,
+#8B5CF6);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+}
+
+.hero p{
+
+font-size:20px;
+margin-top:30px;
+color:#D8D8D8;
+line-height:1.8;
+
+}
+
+.btn-main{
+
+background:linear-gradient(
+90deg,
+#5B5FEF,
+#00D9FF);
+
+border:none;
+padding:15px 35px;
+border-radius:50px;
+font-size:18px;
+font-weight:600;
+color:white;
+transition:.4s;
+box-shadow:0 15px 35px rgba(0,217,255,.25);
+
+}
+
+.btn-main:hover{
+
+transform:translateY(-6px);
+box-shadow:0 25px 45px rgba(0,217,255,.45);
+
+}
+
+.btn-outline-custom{
+
+border:2px solid white;
+padding:15px 35px;
+border-radius:50px;
+margin-left:20px;
+color:white;
+transition:.4s;
+
+}
+
+.btn-outline-custom:hover{
+
+background:white;
+color:#111;
+
+}
+
+.hero-image{
+
+width:100%;
+animation:floating 4s ease-in-out infinite;
+filter:drop-shadow(0 20px 40px rgba(0,0,0,.45));
+
+}
+
+@keyframes floating{
+
+0%{
+
+transform:translateY(0px);
+
+}
+
+50%{
+
+transform:translateY(-20px);
+
+}
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+.glass{
+
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.12);
+border-radius:30px;
+box-shadow:0 20px 45px rgba(0,0,0,.25);
+padding:40px;
+
+}
+
+.section-title{
+
+font-size:45px;
+font-weight:700;
+margin-bottom:60px;
+text-align:center;
+
+}
+
+/* Form Controls */
+
+.form-control{
+
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.15);
+color:white;
+padding:12px;
+
+}
+
+.form-control:focus{
+
+background:rgba(255,255,255,.10);
+color:white;
+border-color:#00D9FF;
+box-shadow:none;
+
+}
+
+.form-label{
+
+font-weight:600;
+
+}
+
+/* Flash Messages */
+
+.alert{
+
+border-radius:15px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="blob"></div>
+<div class="blob"></div>
+<div class="blob"></div>
+
+<!-- Flash Messages -->
+
+<div class="container mt-5 pt-5">
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+
+{% if messages %}
+
+{% for category,message in messages %}
+
+<div class="alert alert-{{category}} alert-dismissible fade show">
+
+{{message}}
+
+<button class="btn-close" data-bs-dismiss="alert"></button>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+{% endwith %}
+
+</div>
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg fixed-top">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="#">
+
+            <i class="fas fa-graduation-cap"></i>
+
+            AI Tutor
+
+        </a>
+
+        <button class="navbar-toggler bg-light"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarMenu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#home">
+
+                        Home
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#features">
+
+                        Features
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#predict">
+
+                        Prediction
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link" href="#dashboard">
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="hero" id="home">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- Left Side -->
+
+            <div class="col-lg-6" data-aos="fade-right">
+
+                <span class="badge bg-primary px-3 py-2 mb-4">
+
+                    AI Powered Learning Platform
+
+                </span>
+
+                <h1 class="hero-title">
+
+                    Personalized
+
+                    <span class="gradient">
+
+                        Student Learning
+
+                    </span>
+
+                    Recommendations
+
+                </h1>
+
+                <p>
+
+                    Harness the power of Artificial Intelligence and Machine Learning
+                    to analyze student performance, predict learning levels,
+                    identify weak subjects and generate personalized study
+                    recommendations for every learner.
+
+                </p>
+
+                <div class="mt-5">
+
+                    <a href="#predict" class="btn btn-main">
+
+                        <i class="fas fa-rocket"></i>
+
+                        Get Started
+
+                    </a>
+
+                    <a href="#features" class="btn btn-outline-custom">
+
+                        Learn More
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- Right Side -->
+
+            <div class="col-lg-6 text-center"
+                 data-aos="zoom-in">
+
+                <img
+
+                src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png"
+
+                class="hero-image img-fluid"
+
+                alt="AI Tutor">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ================= FEATURES ================= -->
+
+<section id="features" class="py-5">
+
+    <div class="container">
+
+        <h2 class="section-title" data-aos="fade-up">
+
+            Why Choose AI Tutor?
+
+        </h2>
+
+        <div class="row g-4">
+
+            <!-- Feature 1 -->
+
+            <div class="col-lg-4" data-aos="fade-up">
+
+                <div class="glass h-100 text-center">
+
+                    <div class="display-2 text-info mb-3">
+
+                        <i class="fas fa-brain"></i>
+
+                    </div>
+
+                    <h3>
+
+                        AI Prediction
+
+                    </h3>
+
+                    <p>
+
+                        Our Random Forest Machine Learning model predicts
+                        student learning levels with high accuracy using
+                        academic performance indicators.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Feature 2 -->
+
+            <div class="col-lg-4"
+                 data-aos="fade-up"
+                 data-aos-delay="200">
+
+                <div class="glass h-100 text-center">
+
+                    <div class="display-2 text-warning mb-3">
+
+                        <i class="fas fa-chart-line"></i>
+
+                    </div>
+
+                    <h3>
+
+                        Performance Analytics
+
+                    </h3>
+
+                    <p>
+
+                        Analyze attendance, GPA, quiz performance,
+                        assignments, study hours and subject scores to
+                        identify learning patterns.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Feature 3 -->
+
+            <div class="col-lg-4"
+                 data-aos="fade-up"
+                 data-aos-delay="400">
+
+                <div class="glass h-100 text-center">
+
+                    <div class="display-2 text-success mb-3">
+
+                        <i class="fas fa-lightbulb"></i>
+
+                    </div>
+
+                    <h3>
+
+                        Smart Recommendations
+
+                    </h3>
+
+                    <p>
+
+                        Receive personalized study plans,
+                        improvement tips and AI-generated
+                        recommendations for every student.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= COUNTERS ================= -->
+
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="glass">
+
+            <div class="row text-center">
+
+                <!-- Students -->
+
+                <div class="col-md-3 mb-4">
+
+                    <h1 class="display-3 fw-bold text-info counter"
+                        data-target="2000">
+
+                        0
+
+                    </h1>
+
+                    <p>
+
+                        Students
+
+                    </p>
+
+                </div>
+
+                <!-- Accuracy -->
+
+                <div class="col-md-3 mb-4">
+
+                    <h1 class="display-3 fw-bold text-success counter"
+                        data-target="95">
+
+                        0
+
+                    </h1>
+
+                    <p>
+
+                        Accuracy %
+
+                    </p>
+
+                </div>
+
+                <!-- Recommendations -->
+
+                <div class="col-md-3 mb-4">
+
+                    <h1 class="display-3 fw-bold text-warning counter"
+                        data-target="5000">
+
+                        0
+
+                    </h1>
+
+                    <p>
+
+                        Recommendations
+
+                    </p>
+
+                </div>
+
+                <!-- Satisfaction -->
+
+                <div class="col-md-3 mb-4">
+
+                    <h1 class="display-3 fw-bold text-primary counter"
+                        data-target="100">
+
+                        0
+
+                    </h1>
+
+                    <p>
+
+                        Satisfaction %
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ================= WHY CHOOSE AI TUTOR ================= -->
+
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="row align-items-center">
+
+            <!-- Left Image -->
+
+            <div class="col-lg-6"
+                 data-aos="fade-right">
+
+                <img
+                src="https://cdn-icons-png.flaticon.com/512/4661/4661318.png"
+                class="img-fluid hero-image"
+                alt="AI Education">
+
+            </div>
+
+            <!-- Right Content -->
+
+            <div class="col-lg-6"
+                 data-aos="fade-left">
+
+                <h2 class="mb-4 fw-bold">
+
+                    Future of Personalized Education
+
+                </h2>
+
+                <p class="mb-4">
+
+                    Traditional education treats every student the same.
+                    AI Tutor analyzes academic performance, attendance,
+                    GPA, study hours and subject scores to create
+                    personalized learning recommendations for every learner.
+
+                </p>
+
+                <div class="row mt-4">
+
+                    <!-- Card 1 -->
+
+                    <div class="col-6 mb-4">
+
+                        <div class="glass text-center h-100">
+
+                            <div class="display-5 text-info mb-3">
+
+                                <i class="fas fa-user-graduate"></i>
+
+                            </div>
+
+                            <h5>
+
+                                Personalized
+
+                            </h5>
+
+                            <small>
+
+                                Learning Plans
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 2 -->
+
+                    <div class="col-6 mb-4">
+
+                        <div class="glass text-center h-100">
+
+                            <div class="display-5 text-warning mb-3">
+
+                                <i class="fas fa-robot"></i>
+
+                            </div>
+
+                            <h5>
+
+                                AI Powered
+
+                            </h5>
+
+                            <small>
+
+                                ML Prediction
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 3 -->
+
+                    <div class="col-6">
+
+                        <div class="glass text-center h-100">
+
+                            <div class="display-5 text-success mb-3">
+
+                                <i class="fas fa-chart-bar"></i>
+
+                            </div>
+
+                            <h5>
+
+                                Analytics
+
+                            </h5>
+
+                            <small>
+
+                                Student Performance
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Card 4 -->
+
+                    <div class="col-6">
+
+                        <div class="glass text-center h-100">
+
+                            <div class="display-5 text-danger mb-3">
+
+                                <i class="fas fa-book-open"></i>
+
+                            </div>
+
+                            <h5>
+
+                                Recommendations
+
+                            </h5>
+
+                            <small>
+
+                                Smart Study Tips
+
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
